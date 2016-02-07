@@ -36,7 +36,12 @@ module.exports = function(app, searchStr) {
         }, function(err, history){
             if(err) throw err;
             console.log(history);
-            
+            res.send(history.map(function(entry){
+                return {
+                    term: entry.term,
+                    when: entry.when
+                }
+            }))
         })
     });
     
