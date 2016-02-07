@@ -11,20 +11,23 @@ module.exports = function(app, searchStr) {
        var search_query = req.params.query;
        
        save(search_query, searchStr);
-    //   var d = {
-    //      "query": queryObject,
-    //      "search query": search_query
-    //   };
-       
+  
       if(offset == undefined){
           offset = 20;
       }
       
        bing_search.images(search_query, {top: offset}, function(err, results){
           if(err) throw err;
-           res.send(JSON.stringify(results, null, 10));
+           res.send(JSON.stringify(results.map(function(entry){
+               return {
+                   url: entry.url,
+                   snippet: entry.title,
+                   thumbnail: entry.thumbnail.url,
+                   context: entry.sourceUrl
+               }
+           }), null, 4));
        });
-    //   res.send(JSON.stringify(d));
+    
     });
     
     app.get('/api/imagesearch/', function(req, res){
